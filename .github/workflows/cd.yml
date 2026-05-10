@@ -23,3 +23,28 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      # -----------------------------
+      # Google Cloud Authentication
+      # -----------------------------
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: notely-495904
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      # -----------------------------
+      # Configure Docker auth for Artifact Registry
+      # -----------------------------
+      - name: Configure Docker auth
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      # -----------------------------
+      # Build + Push Docker image
+      # -----------------------------
+      - name: Build and push image
+        run: |
+          gcloud builds submit \
+            --tag us-central1-docker.pkg.dev/notely-495904/notely-ar-repo/notely:latest \
+            .
