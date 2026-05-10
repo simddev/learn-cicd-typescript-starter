@@ -47,7 +47,7 @@ jobs:
             .
 
       - name: Run database migrations
-        run: npm run migrate
+        run: npm run db:migrate
 
       - name: Deploy to Cloud Run
         run: |
